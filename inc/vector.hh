@@ -2,8 +2,8 @@
 
 #include "size.hh"
 #include <iostream>
-
-class Vector {
+template <int SIZE>
+class Vector{
 
 private:
 
@@ -15,13 +15,13 @@ public:
 
     Vector(double [SIZE]);
 
-    Vector operator + (const Vector &v);
+    Vector<SIZE> operator + (const Vector<SIZE> &v);
 
-    Vector operator - (const Vector &v);
+    Vector<SIZE> operator - (const Vector<SIZE> &v);
 
-    Vector operator * (const double &tmp);
+    Vector<SIZE> operator * (const double &tmp);
 
-    Vector operator / (const double &tmp);
+    Vector<SIZE> operator / (const double &tmp);
 
     const double &operator [] (int index) const;
 
@@ -29,18 +29,17 @@ public:
 
 };
 
-std::ostream &operator << (std::ostream &out, Vector const &tmp);
 
-std::istream &operator >> (std::istream &in, Vector &tmp);
 
 /******************************************************************************
- |  Konstruktor klasy Vector.                                                 |
+ |  Konstruktor klasy Vector<SIZE>.                                                 |
  |  Argumenty:                                                                |
  |      Brak argumentow.                                                      |
  |  Zwraca:                                                                   |
  |      Tablice wypelniona wartoscia 0.                                       |
  */
-Vector::Vector() {
+template <int SIZE>
+Vector<SIZE>::Vector() {
     for (int i = 0; i < SIZE; ++i) {
         size[i] = 0;
     }
@@ -48,14 +47,14 @@ Vector::Vector() {
 
 
 /******************************************************************************
- |  Konstruktor klasy Vector.                                                 |
+ |  Konstruktor klasy Vector<SIZE>.                                                 |
  |  Argumenty:                                                                |
  |      tmp - Jednowymiarowa tablica typu double.                             |
  |  Zwraca:                                                                   |
  |      Tablice wypelniona wartosciami podanymi w argumencie.                 |
  */
-
-Vector::Vector(double tmp[SIZE]) {
+template <int SIZE>
+Vector<SIZE>::Vector(double tmp[SIZE]) {
     for (int i = 0; i < SIZE; ++i) {
         size[i] = tmp[i];
     }
@@ -71,8 +70,9 @@ Vector::Vector(double tmp[SIZE]) {
  |      Sume dwoch skladnikow przekazanych jako wskaznik                      |
  |      na parametr.                                                          |
  */
-Vector Vector::operator + (const Vector &v) {
-    Vector result;
+template <int SIZE>
+Vector<SIZE> Vector<SIZE>::operator + (const Vector<SIZE> &v) {
+    Vector<SIZE> result;
     for (int i = 0; i < SIZE; ++i) {
         result[i] = size[i] += v[i];
     }
@@ -89,8 +89,9 @@ Vector Vector::operator + (const Vector &v) {
  |      Roznice dwoch skladnikow przekazanych jako wskaznik                   |
  |      na parametr.                                                          |
  */
-Vector Vector::operator - (const Vector &v) {
-    Vector result;
+template <int SIZE>
+Vector<SIZE> Vector<SIZE>::operator - (const Vector<SIZE> &v) {
+    Vector<SIZE> result;
     for (int i = 0; i < SIZE; ++i) {
         result[i] = size[i] -= v[i];
     }
@@ -107,9 +108,9 @@ Vector Vector::operator - (const Vector &v) {
  |      Iloczyn dwoch skladnikow przekazanych jako wskaznik                   |
  |      na parametr.                                                          |
  */
-
-Vector Vector::operator * (const double &tmp) {
-    Vector result;
+template <int SIZE>
+Vector<SIZE> Vector<SIZE>::operator * (const double &tmp) {
+    Vector<SIZE> result;
     for (int i = 0; i < SIZE; ++i) {
         result[i] = size[i] *= tmp;
     }
@@ -126,9 +127,9 @@ Vector Vector::operator * (const double &tmp) {
  |      Iloraz dwoch skladnikow przekazanych jako wskaznik                    |
  |      na parametr.                                                          |
  */
-
-Vector Vector::operator / (const double &tmp) {
-    Vector result;
+template <int SIZE>
+Vector<SIZE> Vector<SIZE>::operator / (const double &tmp) {
+    Vector<SIZE> result;
 
     for (int i = 0; i < SIZE; ++i) {
         result[i] = size[i] / tmp;
@@ -145,7 +146,8 @@ Vector Vector::operator / (const double &tmp) {
  |  Zwraca:                                                                   |
  |      Wartosc wektora w danym miejscu tablicy jako stala.                   |
  */
-const double &Vector::operator [] (int index) const {
+template <int SIZE>
+const double &Vector<SIZE>::operator [] (int index) const {
     if (index < 0 || index >= SIZE) {
         std::cerr << "Error: Wektor jest poza zasiegiem!" << std::endl;
     } // lepiej byłoby rzucić wyjątkiem stdexcept
@@ -160,8 +162,9 @@ const double &Vector::operator [] (int index) const {
  |  Zwraca:                                                                   |
  |      Wartosc wektora w danym miejscu tablicy.                              |
  */
-double &Vector::operator[](int index) {
-    return const_cast<double &>(const_cast<const Vector *>(this)->operator[](index));
+template <int SIZE>
+double &Vector<SIZE>::operator[](int index) {
+    return const_cast<double &>(const_cast<const Vector<SIZE> *>(this)->operator[](index));
 }
 
 
@@ -171,9 +174,10 @@ double &Vector::operator[](int index) {
  |      out - strumien wejsciowy,                                             |
  |      tmp - wektor.                                                         |
  */
-std::ostream &operator << (std::ostream &out, Vector const &tmp) {
+template <int SIZE>
+std::ostream &operator << (std::ostream &out, Vector<SIZE> const &tmp) {
     for (int i = 0; i < SIZE; ++i) {
-        out << "[ " << tmp[i] << " ]\n";
+        out  << tmp[i] <<" ";
     }
     return out;
 }
@@ -185,7 +189,8 @@ std::ostream &operator << (std::ostream &out, Vector const &tmp) {
  |      in - strumien wyjsciowy,                                              |
  |      tmp - wektor.                                                         |
  */
-std::istream &operator >> (std::istream &in, Vector &tmp) {
+template <int SIZE>
+std::istream &operator >> (std::istream &in, Vector<SIZE> &tmp) {
     for (int i = 0; i < SIZE; ++i) {
         in >> tmp[i];
     }
